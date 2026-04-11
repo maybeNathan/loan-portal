@@ -22,7 +22,9 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/fix-flip-
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true
@@ -42,8 +44,16 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Fix & Flip Loan Broker API' });
 });
 
+// Serve frontend build in production
+const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');
+import('fs').then(fs => console.log('Frontend dist path:', frontendDist, 'exists:', fs.existsSync(frontendDist)));
+app.use(express.static(frontendDist));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendDist, 'index.html'));
+});
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
