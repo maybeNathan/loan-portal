@@ -10,6 +10,7 @@ import LoanDetails from './pages/LoanDetails';
 import Calculators from './pages/Calculators';
 import Messages from './pages/Messages';
 import Profile from './pages/Profile';
+import Landing from './pages/Landing';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -73,7 +74,8 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Landing />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
