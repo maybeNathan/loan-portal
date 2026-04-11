@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: we-fund-flips
+    runtime: node
+    buildCommand: cd frontend && npm install && npm run build && cd ../backend && npm install
+    startCommand: cd backend && node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        value: yybQ2u9qSre+BHPP8WSvkaH86jONd+eOT914d8AyI3s=
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: MONGODB_URI
+        sync: false
+      - key: FRONTEND_URL
+        value: https://we-fund-flips.onrender.com
